@@ -14,3 +14,8 @@
     "express": "^4.19.2"
   }
 }
+"dependencies": {
+  "dotenv": "^x.x.x",  // The version number will vary
+  "escpos": "^x.x.x",
+  "express": "^x.x.x"
+}
