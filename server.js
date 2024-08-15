@@ -22,12 +22,13 @@ function printReceipt(data) {
 }
 
 app.post('/print', (req, res) => {
-    const { data } = req.body;
-    if (!data) {
+    const { printerIP, printData } = req.body;
+    if (!printData) {
         return res.status(400).send('No data provided');
     }
+    // Optionally, you can validate and use the printerIP if required
     try {
-        printReceipt(data);
+        printReceipt(printData); // You can adjust this to use the printerIP if needed
         res.send('Print job sent');
     } catch (error) {
         console.error('Print error:', error);
