@@ -6,10 +6,14 @@ const app = express();
 app.use(express.json());
 
 function printReceipt(data) {
-    const device = new escpos.Network(process.env.PRINTER_IP); // Replace with your printer’s IP
+    const device = new escpos.Network(process.env.PRINTER_IP); // Ensure PRINTER_IP is set correctly
     const printer = new escpos.Printer(device);
 
-    device.open(function() {
+    device.open(function(err) {
+        if (err) {
+            console.error('Failed to open printer:', err);
+            return;
+        }
         printer
             .text(data)
             .cut()
@@ -19,8 +23,16 @@ function printReceipt(data) {
 
 app.post('/print', (req, res) => {
     const { data } = req.body;
-    printReceipt(data);
-    res.send('Print job sent');
+    if (!data) {
+        return res.status(400).send('No data provided');
+    }
+    try {
+        printReceipt(data);
+        res.send('Print job sent');
+    } catch (error) {
+        console.error('Print error:', error);
+        res.status(500).send('Failed to print');
+    }
 });
 
 const PORT = process.env.PORT || 3000;
